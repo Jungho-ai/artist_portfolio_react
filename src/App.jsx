@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+import flowing_tree_image from "./assets/flowing_tree.jpg";
 
 /*
   ==========================================================
@@ -41,12 +42,17 @@ import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom"
   [어느 화면에 반영되나?]
   - Home 페이지의 첫 화면 대표작 영역에 반영됩니다.
 */
+
+/*
+jph import code
+
+*/
 const featuredWork = {
-  title: "FIELD FIGURE IX",
-  year: "2026",
+  title: "흐르는 나뭇가지",
+  year: "2025",
   medium: "Cast iron",
   image:
-    "https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=1600&q=80",
+    flowing_tree_image,
   description:
     "첫 화면에서 대표작이 강하게 보이도록 구성한 히어로 영역입니다. 이후 아래로 이어지는 작품 아카이브로 자연스럽게 연결됩니다.",
 };
