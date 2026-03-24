@@ -57,8 +57,7 @@ const featuredWork = {
   title: "FIELD FIGURE IX",
   year: "2026",
   medium: "Cast iron",
-  image:
-    "https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=1600&q=80",
+  image:sampleImage,
   description:
     "첫 화면에서 대표작이 강하게 보이도록 구성한 히어로 영역입니다. 이후 아래로 이어지는 작품 아카이브로 자연스럽게 연결됩니다.",
 };
@@ -128,9 +127,7 @@ const menu = [
     label: "Resources",
     children: [
       { label: "CV", path: "/resources/CV" },
-      { label: "Publications", path: "/resources/publications" },
-      { label: "Texts", path: "/resources/texts" },
-      { label: "Press", path: "/resources/press" },
+      { label: "Texts", path: "/resources/texts" }
     ],
   },
 ];
@@ -433,11 +430,11 @@ function SiteHeader() {
             </Link>
           </div>
 
-          <div className="relative">
+          <div className="relative translate-x-3">
             <button
               type="button"
               onClick={() => setMenuOpen(!menuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300"
+              className="flex h-10 w-10 items-center justify-center"
               aria-label="Toggle menu"
             >
               <span className="text-lg leading-none">
@@ -450,7 +447,7 @@ function SiteHeader() {
                 <div className="space-y-6">
                   {menu.map((item) => (
                     <div key={item.label}>
-                      <p className="text-xs uppercase tracking-[0.25em] text-neutral-500">
+                      <p className="text-xs uppercase tracking-[0.25em] text-neutral-800">
                         {item.label}
                       </p>
 
@@ -459,7 +456,7 @@ function SiteHeader() {
                           <li key={sub.path}>
                             <Link
                               to={sub.path}
-                              className="block text-sm text-neutral-700 transition hover:text-black"
+                              className="block text-sm text-neutral-500 transition hover:text-black"
                               onClick={() => setMenuOpen(false)}
                             >
                               {sub.label}
@@ -481,7 +478,7 @@ function SiteHeader() {
 function SiteFooter() {
   return (
     <footer className="border-t border-neutral-200 bg-white">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 lg:flex-row lg:items-end lg:justify-between lg:px-10">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 lg:px-10">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
             Contact
@@ -547,11 +544,11 @@ function HomePage() {
       */}
       <section className="mx-auto max-w-7xl px-6 py-8 lg:px-10 lg:py-10">
         <div className="relative overflow-hidden bg-neutral-200 shadow-sm">
-          <img
-            src={featuredWork.image}
-            alt={featuredWork.title}
-            className="h-[62vh] w-full object-cover lg:h-[86vh]"
-          />
+        <img
+          src={featuredWork.image}
+          alt={featuredWork.title}
+          className="w-full h-auto object-contain"
+        />
 
           {/*
             대표작 캡션 오버레이
