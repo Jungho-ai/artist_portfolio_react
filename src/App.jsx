@@ -1,9 +1,12 @@
 import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
-import flowing_tree_image from "./assets/flowing_tree.jpg";
+import sampleImage from "./assets/flowing_tree.jpg";
+import { useState } from "react";
+
 
 /*
   ==========================================================
-  react-router-dom 기반 page
+  이 파일은 단일 파일 시안이지만, 실제 하위 페이지 이동이 가능하도록
+  react-router-dom 기반 구조로 바꾼 버전입니다.
   ==========================================================
 
   [중요]
@@ -18,6 +21,14 @@ import flowing_tree_image from "./assets/flowing_tree.jpg";
   3) 메뉴 / 하위 메뉴 경로 수정 -> menu
   4) 각 하위 페이지의 임시 내용 수정 -> pageContent
   5) 이메일 / 인스타그램 수정 -> SiteFooter
+
+  [이번 수정에서 해결한 것]
+  1) 하위 메뉴를 실제 페이지 라우팅으로 분리
+  2) 드롭다운 메뉴에 마우스를 옮길 때 창이 사라지는 문제 해결
+
+  [드롭다운 문제 원인]
+  기존 코드에서는 버튼 아래와 드롭다운 박스 사이에 hover가 끊기는 공간이 있었고,
+  group-hover만으로 처리해서 마우스가 하위 메뉴로 이동하는 순간 hover가 풀렸습니다.
 
   [해결 방식]
   - 메뉴 item 전체를 relative 컨테이너로 감쌈
@@ -42,17 +53,12 @@ import flowing_tree_image from "./assets/flowing_tree.jpg";
   [어느 화면에 반영되나?]
   - Home 페이지의 첫 화면 대표작 영역에 반영됩니다.
 */
-
-/*
-jph import code
-
-*/
 const featuredWork = {
-  title: "흐르는 나뭇가지",
-  year: "2025",
+  title: "FIELD FIGURE IX",
+  year: "2026",
   medium: "Cast iron",
   image:
-    flowing_tree_image,
+    "https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=1600&q=80",
   description:
     "첫 화면에서 대표작이 강하게 보이도록 구성한 히어로 영역입니다. 이후 아래로 이어지는 작품 아카이브로 자연스럽게 연결됩니다.",
 };
@@ -81,66 +87,6 @@ const featuredWork = {
   - 추후 작품 상세 페이지 연결 시 slug를 사용할 수 있음
 */
 const works = [
-  {
-    id: 1,
-    slug: "horizon-body",
-    title: "Horizon Body",
-    year: "2025",
-    category: "Exhibitions",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-    summary: "대형 설치 작업과 전시 문맥을 함께 보여주는 작품입니다.",
-  },
-  {
-    id: 2,
-    slug: "standing-matter",
-    title: "Standing Matter",
-    year: "2024",
-    category: "Drawing",
-    image:
-      "https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&w=1200&q=80",
-    summary: "조형적 아이디어를 드로잉 언어로 압축한 작업입니다.",
-  },
-  {
-    id: 3,
-    slug: "threshold-form",
-    title: "Threshold Form",
-    year: "2024",
-    category: "Making",
-    image:
-      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=1200&q=80",
-    summary: "제작 과정과 재료 실험을 기록하는 성격의 작업입니다.",
-  },
-  {
-    id: 4,
-    slug: "weight-of-air",
-    title: "Weight of Air",
-    year: "2023",
-    category: "Exhibitions",
-    image:
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
-    summary: "공간감과 신체성을 동시에 다루는 전시 중심 작업입니다.",
-  },
-  {
-    id: 5,
-    slug: "body-diagram",
-    title: "Body Diagram",
-    year: "2023",
-    category: "Drawing",
-    image:
-      "https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=1200&q=80",
-    summary: "작가의 사고 흐름을 선과 면으로 정리한 드로잉입니다.",
-  },
-  {
-    id: 6,
-    slug: "process-study",
-    title: "Process Study",
-    year: "2022",
-    category: "Making",
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
-    summary: "완성 이전의 과정과 구조를 보여주는 스터디 작업입니다.",
-  },
 ];
 
 /*
@@ -166,17 +112,22 @@ const menu = [
     ],
   },
   {
+    label: "Exhibition",
+    children: [
+      { label: "Archive", path: "/exhibition/archive" },
+    ],
+  },
+  {
     label: "Works",
     children: [
-      { label: "Exhibitions", path: "/works/exhibitions" },
       { label: "Drawing", path: "/works/drawing" },
-      { label: "Making", path: "/works/making" },
+      { label: "Artist's Note", path: "/works/Artist's note" },
     ],
   },
   {
     label: "Resources",
     children: [
-      { label: "Profile", path: "/resources/profile" },
+      { label: "CV", path: "/resources/CV" },
       { label: "Publications", path: "/resources/publications" },
       { label: "Texts", path: "/resources/texts" },
       { label: "Press", path: "/resources/press" },
@@ -199,6 +150,68 @@ const menu = [
 
   나중에 실제 데이터가 생기면 이 부분만 교체하면 됩니다.
 */
+const artistNotes = [
+  {
+    id: 1,
+    date: "March 2026",
+    title: "On figure and distance",
+    body: [
+      "I have been thinking about how a figure can function less as an isolated object and more as a measure of distance within a room.",
+      "The work begins not with anatomy but with interval: the gap between a surface and the body that approaches it, the gap between one object and another, and the invisible tension formed between them.",
+      "In recent studio work, I have tried to reduce the amount of explanation inside the object itself and allow more of the meaning to emerge through placement, weight, and surrounding emptiness.",
+    ],
+  },
+  {
+  id: 2,
+    date: "March 2026",
+    title: "On figure and distance",
+    image: sampleImage,
+    imageAlt: "Artist note related image 1",
+    body: [
+      "문단1",
+      "문단2",
+      "문단3",
+    ],
+  },
+  {
+    id: 3,
+    date: "October 2025",
+    title: "Studio note on repetition",
+    body: [
+      "Repetition is useful not because it guarantees refinement, but because it reveals where refinement stops being productive.",
+      "By remaking a similar structure several times, I can observe which decisions are essential and which are merely habitual.",
+      "The note I leave for myself is simple: repeat until the structure becomes clear, then stop before the work turns illustrative.",
+    ],
+  },
+];
+
+const drawingWorks = [
+  {
+    id: 1,
+    title: "Drawing I",
+    year: "2026",
+    medium: "Graphite on paper",
+    size: "10 × 10 cm",
+    image: "https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    id: 2,
+    title: "Drawing II",
+    year: "2025",
+    medium: "Ink on paper",
+    size: "24 × 18 cm",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    id: 3,
+    title: "Drawing III",
+    year: "2025",
+    medium: "Charcoal on paper",
+    size: "30 × 20 cm",
+    image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
+  },
+];
+
 const pageContent = {
   "/news/current": {
     title: "Current",
@@ -230,8 +243,8 @@ const pageContent = {
       "Concept sketches for large-scale sculpture",
     ],
   },
-  "/works/making": {
-    title: "Making",
+  "/works/Artist's Note": {
+    title: "Artist's Note",
     intro:
       "재료 실험, 제작 과정, 스튜디오 기록을 보여주는 페이지입니다.",
     blocks: [
@@ -274,14 +287,14 @@ const pageContent = {
 
 /*
   =====================================
-  Profile 페이지 데이터
+  CV 페이지 데이터
   =====================================
 
-  Antony Gormley 사이트의 Profile 페이지처럼,
+  Antony Gormley 사이트의 CV 페이지처럼,
   이미지 + 작가 소개 + 약력/전시/컬렉션 등의 문서형 레이아웃을 참고하되
   직접 복제하지 않고 보다 범용적인 아카이브 형식으로 구성합니다.
 */
-const profileData = {
+const CVData = {
   portrait:
     "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1400&q=80",
   name: "JungIn An",
@@ -291,26 +304,17 @@ const profileData = {
     "Recent work has expanded into large-scale exhibition formats, public commissions, and material-based studio research."
   ],
   biography: [
-    "Born in Seoul, based between Seoul and London.",
+    "Seoul",
     "Studied fine art and spatial practice, later developing a body of work spanning sculpture, drawing, and site-responsive installation.",
     "Works have been presented in museums, galleries, and public spaces internationally."
   ],
-  details: {
-    born: "1990, Seoul, South Korea",
-    based: "Seoul / London",
-    media: "Sculpture, Drawing, Installation",
-  },
+  
   selectedExhibitions: [
     "2026 — Bodies in Space, National Museum, Seoul",
     "2025 — Threshold Forms, Example Gallery, London",
     "2024 — Matter and Presence, Project Space, Busan",
     "2023 — Field Notes, Studio Archive, Tokyo",
-  ],
-  collections: [
-    "Example Museum Collection",
-    "Private Collection, Seoul",
-    "Public Art Commission Archive",
-  ],
+  ]
 };
 
 /*
@@ -415,62 +419,65 @@ const exhibitions = [
   =====================================
 */
 function SiteHeader() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-stone-50/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-        <div>
-          {/* 실제 작가 이름으로 바꾸려면 여기 수정 */}
-          <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-          </p>
-          <Link to="/" className="mt-1 block text-2xl tracking-wide">
-            JungIn An
-          </Link>
-        </div>
+      <div className="mx-auto max-w-7xl px-6 py-5 lg:px-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+            </p>
+            <Link to="/" className="mt-1 block text-2xl tracking-wide">
+              JungIn An
+            </Link>
+          </div>
 
-        <nav className="hidden gap-8 lg:flex">
-          {menu.map((item) => (
-            <div key={item.label} className="group relative">
-              <button
-                type="button"
-                className="text-sm uppercase tracking-[0.22em] text-neutral-700 transition hover:text-black"
-              >
-                {item.label}
-              </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300"
+              aria-label="Toggle menu"
+            >
+              <span className="text-lg leading-none">
+                {menuOpen ? "×" : "☰"}
+              </span>
+            </button>
 
-              {/*
-                드롭다운 사라짐 문제 해결 포인트
-                ---------------------------------
-                1) top-full 로 부모 바로 아래에 붙여 hover 단절을 줄임
-                2) pt-3 로 시각적 여백은 주되, 실제 hover 영역은 이어지게 구성
-                3) invisible/opacity/pointer-events 제어
-                4) group-hover + group-focus-within 동시 적용
+            {menuOpen && (
+              <div className="absolute right-0 top-full z-50 mt-3 w-72 border border-neutral-200 bg-white p-5 shadow-sm">
+                <div className="space-y-6">
+                  {menu.map((item) => (
+                    <div key={item.label}>
+                      <p className="text-xs uppercase tracking-[0.25em] text-neutral-500">
+                        {item.label}
+                      </p>
 
-                만약 여백을 더 벌리고 싶으면 mt 대신 pt를 활용하는 편이 안전합니다.
-              */}
-              <div className="invisible absolute left-0 top-full z-50 pt-3 opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="min-w-[240px] rounded-2xl border border-neutral-200 bg-white p-4 shadow-xl">
-                  <ul className="space-y-3">
-                    {item.children.map((sub) => (
-                      <li key={sub.path}>
-                        <Link
-                          to={sub.path}
-                          className="block text-sm text-neutral-600 transition hover:text-black"
-                        >
-                          {sub.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                      <ul className="mt-3 space-y-3">
+                        {item.children.map((sub) => (
+                          <li key={sub.path}>
+                            <Link
+                              to={sub.path}
+                              className="block text-sm text-neutral-700 transition hover:text-black"
+                              onClick={() => setMenuOpen(false)}
+                            >
+                              {sub.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          ))}
-        </nav>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );
 }
-
 function SiteFooter() {
   return (
     <footer className="border-t border-neutral-200 bg-white">
@@ -479,26 +486,26 @@ function SiteFooter() {
           <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
             Contact
           </p>
-          <h5 className="mt-2 text-2xl">Get in touch</h5>
+          <h5 className="mt-2 text-2xl"></h5>
         </div>
 
         <div className="space-y-3 text-sm">
-          {/* E-Mail */}
+          {/* 실제 이메일 주소를 넣으려면 href와 텍스트를 함께 수정 */}
           <a
-            href="mailto:artist@example.com"
+            href="mailto:wjddls0611@naver.com"
             className="block text-neutral-700 underline underline-offset-4 transition hover:text-black"
           >
-            artist@example.com
+            wjddls0611@naver.com
           </a>
 
-          {/* Instagram */}
+          {/* 실제 인스타그램 주소를 넣으려면 href와 텍스트를 함께 수정 */}
           <a
             href="https://www.instagram.com/inny_artist/"
             target="_blank"
             rel="noreferrer"
             className="block text-neutral-700 underline underline-offset-4 transition hover:text-black"
           >
-            @inny_artist
+            @inny_artis
           </a>
         </div>
       </div>
@@ -539,7 +546,7 @@ function HomePage() {
         - 캡션 글자 크기 / 색 수정 -> 아래 caption div의 className 수정
       */}
       <section className="mx-auto max-w-7xl px-6 py-8 lg:px-10 lg:py-10">
-        <div className="relative overflow-hidden rounded-[2rem] bg-neutral-200 shadow-sm">
+        <div className="relative overflow-hidden bg-neutral-200 shadow-sm">
           <img
             src={featuredWork.image}
             alt={featuredWork.title}
@@ -593,20 +600,13 @@ function HomePage() {
       */}
       <section className="mx-auto max-w-7xl px-6 pb-24 lg:px-10">
         <div className="mb-10 border-b border-neutral-200 pb-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-            Works Archive
-          </p>
-          <h3 className="mt-2 text-2xl">Selected Works</h3>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-600">
-            아래 작품들은 카드가 아니라 작품 하나씩 차례로 이어지는 형식입니다.
-            works 배열에 데이터를 추가하면 이 아카이브가 계속 길어지는 구조입니다.
-          </p>
+
         </div>
 
         <div className="space-y-16 lg:space-y-24">
           {works.map((work) => (
             <article key={work.id} className="border-b border-neutral-200 pb-12 lg:pb-16">
-              <div className="overflow-hidden rounded-[2rem] bg-neutral-200">
+              <div className="overflow-hidden bg-neutral-200">
                 <img
                   src={work.image}
                   alt={work.title}
@@ -676,7 +676,7 @@ function SubPage({ pageKey }) {
           {data.blocks.map((block, index) => (
             <article
               key={`${pageKey}-${index}`}
-              className="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-sm"
+              className="border border-neutral-200 bg-white p-6 shadow-sm"
             >
               <p className="text-xs uppercase tracking-[0.25em] text-neutral-500">
                 Item {index + 1}
@@ -692,11 +692,11 @@ function SubPage({ pageKey }) {
 
 /*
   =====================================
-  Resources -> Profile 전용 페이지
+  Resources -> CV 전용 페이지
   =====================================
 
   사용자가 요청한 대로,
-  Antony Gormley의 Profile 페이지 같은 "문서형 아카이브" 분위기를 참고하되
+  Antony Gormley의 CV 페이지 같은 "문서형 아카이브" 분위기를 참고하되
   그대로 복제하지 않고 범용 작가 포트폴리오에 맞는 구조로 구성했습니다.
 
   [레이아웃 특징]
@@ -704,16 +704,16 @@ function SubPage({ pageKey }) {
   - 우측/하단에 작가 소개문
   - 아래에 Biography / Details / Selected Exhibitions / Collections 분리
 */
-function ProfilePage() {
+function CVPage() {
   return (
     <Layout>
       <section className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-16">
         <div className="grid grid-cols-1 gap-10 border-b border-neutral-200 pb-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <div className="overflow-hidden rounded-[2rem] bg-neutral-200">
+            <div className="overflow-hidden bg-neutral-200">
               <img
-                src={profileData.portrait}
-                alt={profileData.name}
+                src={CVData.portrait}
+                alt={CVData.name}
                 className="h-[55vh] w-full object-cover lg:h-[72vh]"
               />
             </div>
@@ -724,14 +724,14 @@ function ProfilePage() {
               Resources
             </p>
             <h1 className="mt-3 text-4xl leading-tight lg:text-5xl">
-              Profile
+              CV
             </h1>
             <h2 className="mt-6 text-2xl leading-tight lg:text-3xl">
-              {profileData.name}
+              {CVData.name}
             </h2>
 
             <div className="mt-8 space-y-5">
-              {profileData.statement.map((paragraph, index) => (
+              {CVData.statement.map((paragraph, index) => (
                 <p
                   key={`statement-${index}`}
                   className="max-w-3xl text-sm leading-8 text-neutral-700"
@@ -750,7 +750,7 @@ function ProfilePage() {
             </p>
           </div>
           <div className="space-y-5 lg:col-span-8">
-            {profileData.biography.map((paragraph, index) => (
+            {CVData.biography.map((paragraph, index) => (
               <p
                 key={`bio-${index}`}
                 className="max-w-3xl text-sm leading-8 text-neutral-700"
@@ -761,29 +761,6 @@ function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 border-t border-neutral-200 py-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-              Details
-            </p>
-          </div>
-          <div className="lg:col-span-8">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div className="rounded-[1.5rem] border border-neutral-200 bg-white p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">Born</p>
-                <p className="mt-3 text-sm leading-7 text-neutral-700">{profileData.details.born}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-neutral-200 bg-white p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">Based</p>
-                <p className="mt-3 text-sm leading-7 text-neutral-700">{profileData.details.based}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-neutral-200 bg-white p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">Media</p>
-                <p className="mt-3 text-sm leading-7 text-neutral-700">{profileData.details.media}</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="grid grid-cols-1 gap-12 border-t border-neutral-200 py-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -793,7 +770,7 @@ function ProfilePage() {
           </div>
           <div className="lg:col-span-8">
             <div className="space-y-4">
-              {profileData.selectedExhibitions.map((item, index) => (
+              {CVData.selectedExhibitions.map((item, index) => (
                 <div key={`exhibition-${index}`} className="border-b border-neutral-200 pb-4">
                   <p className="text-sm leading-7 text-neutral-700">{item}</p>
                 </div>
@@ -802,22 +779,7 @@ function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 border-t border-neutral-200 py-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-              Collections
-            </p>
-          </div>
-          <div className="lg:col-span-8">
-            <div className="space-y-4">
-              {profileData.collections.map((item, index) => (
-                <div key={`collection-${index}`} className="border-b border-neutral-200 pb-4">
-                  <p className="text-sm leading-7 text-neutral-700">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+
       </section>
     </Layout>
   );
@@ -839,9 +801,9 @@ function ExhibitionsArchivePage() {
       <section className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-16">
         <div className="border-b border-neutral-200 pb-8">
           <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-            Works
+            Exhibition
           </p>
-          <h1 className="mt-3 text-4xl leading-tight lg:text-5xl">Exhibitions</h1>
+          <h1 className="mt-3 text-4xl leading-tight lg:text-5xl">Archive</h1>
           <p className="mt-6 max-w-3xl text-sm leading-7 text-neutral-600">
             전시 목록이 아카이브 형식으로 정리되는 페이지입니다. 각 전시의 대표 이미지를 클릭하면 해당 전시의 전체 이미지가 보이는 상세 페이지로 이동합니다.
           </p>
@@ -850,8 +812,8 @@ function ExhibitionsArchivePage() {
         <div className="mt-12 space-y-16 lg:space-y-24">
           {exhibitions.map((exhibition) => (
             <article key={exhibition.slug} className="border-b border-neutral-200 pb-12 lg:pb-16">
-              <Link to={`/works/exhibitions/${exhibition.slug}`} className="block">
-                <div className="overflow-hidden rounded-[2rem] bg-neutral-200">
+              <Link to={`/exhibition/archive/${exhibition.slug}`} className="block">
+                <div className="overflow-hidden bg-neutral-200">
                   <img
                     src={exhibition.coverImage}
                     alt={exhibition.title}
@@ -863,7 +825,7 @@ function ExhibitionsArchivePage() {
               <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
                 <div className="lg:col-span-4">
                   <h2 className="text-2xl leading-tight lg:text-3xl">
-                    <Link to={`/works/exhibitions/${exhibition.slug}`} className="hover:underline underline-offset-4">
+                    <Link to={`/exhibition/archive/${exhibition.slug}`} className="hover:underline underline-offset-4">
                       {exhibition.title}
                     </Link>
                   </h2>
@@ -924,17 +886,17 @@ function ExhibitionDetailPage() {
 
         <div className="mt-8">
           <Link
-            to="/works/exhibitions"
+            to="/exhibition/archive"
             className="text-sm text-neutral-700 underline underline-offset-4"
           >
-            Back to exhibitions
+            Back to exhibition archive
           </Link>
         </div>
 
         <div className="mt-10 space-y-12 lg:space-y-16">
           {exhibition.detailImages.map((image) => (
             <article key={image.id}>
-              <div className="overflow-hidden rounded-[2rem] bg-neutral-200">
+              <div className="overflow-hidden bg-neutral-200">
                 <img
                   src={image.src}
                   alt={image.alt}
@@ -951,6 +913,169 @@ function ExhibitionDetailPage() {
     </Layout>
   );
 }
+
+function DrawingPage() {
+  const [selectedDrawing, setSelectedDrawing] = useState(null);
+
+  return (
+    <Layout>
+      <section className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-16">
+        <div className="border-b border-neutral-200 pb-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+            Works
+          </p>
+          <h1 className="mt-3 text-4xl leading-tight lg:text-5xl">Drawing</h1>
+        </div>
+
+        <div className="mt-12 space-y-12 lg:space-y-16">
+          {drawingWorks.map((work) => (
+            <button
+              key={work.id}
+              type="button"
+              onClick={() => setSelectedDrawing(work)}
+              className="block w-full border-b border-neutral-200 pb-12 text-left lg:pb-16"
+            >
+              <div className="overflow-hidden bg-neutral-200">
+                <img
+                  src={work.image}
+                  alt={work.title}
+                  className="h-[48vh] w-full object-cover lg:h-[78vh]"
+                />
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {selectedDrawing && (
+        <div className="fixed inset-0 z-[100] bg-black/70 px-6 py-6 lg:px-10 lg:py-10">
+          <div className="mx-auto grid h-full max-w-7xl grid-cols-1 gap-6 bg-white p-4 shadow-2xl lg:grid-cols-12 lg:p-6">
+            <div className="overflow-hidden bg-neutral-200 lg:col-span-8">
+              <img
+                src={selectedDrawing.image}
+                alt={selectedDrawing.title}
+                className="h-[55vh] w-full object-cover lg:h-full"
+              />
+            </div>
+
+            <div className="flex flex-col justify-between lg:col-span-4 lg:pl-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+                  Caption
+                </p>
+
+                <div className="mt-6 space-y-6 text-sm leading-7 text-neutral-700">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                      Title
+                    </p>
+                    <p className="mt-2">{selectedDrawing.title}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                      Year
+                    </p>
+                    <p className="mt-2">{selectedDrawing.year}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                      Medium
+                    </p>
+                    <p className="mt-2">{selectedDrawing.medium}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                      Size
+                    </p>
+                    <p className="mt-2">{selectedDrawing.size}</p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedDrawing(null)}
+                className="mt-8 inline-flex w-fit rounded-full border border-neutral-300 px-4 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </Layout>
+  );
+}
+
+function ArtistsNotePage() {
+  return (
+    <Layout>
+      <section className="mx-auto max-w-5xl px-6 py-12 lg:px-10 lg:py-16">
+        <div className="border-b border-neutral-200 pb-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+            Works
+          </p>
+          <h1 className="mt-3 text-4xl leading-tight lg:text-5xl">
+            Artist&apos;s Note
+          </h1>
+          <p className="mt-6 max-w-3xl text-sm leading-7 text-neutral-600">
+            작가 노트를 아카이브 형식으로 쌓아두는 페이지입니다. 새로운
+            노트는 <code>artistNotes</code> 배열에 추가하면 세로로 계속
+            이어지는 구조로 자동 반영됩니다.
+          </p>
+        </div>
+
+        <div className="mt-12 space-y-16 lg:space-y-20">
+          {artistNotes.map((note) => (
+            <article
+              key={note.id}
+              className="border-b border-neutral-200 pb-12 lg:pb-16"
+            >
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+                <div className="lg:col-span-3">
+                  <p className="text-xs uppercase tracking-[0.22em] text-neutral-500">
+                    {note.date}
+                  </p>
+                </div>
+
+              <div className="lg:col-span-9">
+                <h2 className="text-2xl leading-tight lg:text-3xl">
+                  {note.title}
+                    </h2>
+
+                    {note.image && (
+                      <div className="mt-6 overflow-hidden bg-neutral-200">
+                        <img
+                          src={note.image}
+                          alt={note.imageAlt || note.title}
+                          className="h-[36vh] w-full object-cover lg:h-[56vh]"
+                        />
+                      </div>
+                    )}
+
+                    <div className="mt-6 space-y-5">
+                      {note.body.map((paragraph, index) => (
+                        <p
+                          key={`${note.id}-${index}`}
+                          className="text-sm leading-8 text-neutral-700"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </Layout>
+  );
+}
+
 
 function NotFoundPage() {
   return (
@@ -1002,25 +1127,25 @@ export default function App() {
         />
 
         <Route
-          path="/works/exhibitions"
+          path="/exhibition/archive"
           element={<ExhibitionsArchivePage />}
         />
         <Route
-          path="/works/exhibitions/:slug"
+          path="/exhibition/archive/:slug"
           element={<ExhibitionDetailPage />}
         />
         <Route
           path="/works/drawing"
-          element={<SubPage pageKey="/works/drawing" />}
+          element={<DrawingPage />}
         />
         <Route
-          path="/works/making"
-          element={<SubPage pageKey="/works/making" />}
+          path="/works/Artist's Note"
+          element={<ArtistsNotePage />}
         />
 
         <Route
-          path="/resources/profile"
-          element={<ProfilePage />}
+          path="/resources/CV"
+          element={<CVPage />}
         />
         <Route
           path="/resources/publications"
